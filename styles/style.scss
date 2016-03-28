@@ -89,6 +89,9 @@ ul, ol {
  * GENERAL
  */
 
+html {
+    margin: 0;
+}
 img {
     max-width: 100%;
 }
@@ -127,3 +130,100 @@ body {
 /**
  * App code
  */
+
+
+
+$tablet: "screen and (min-width: 640px)";
+$primary-color: #bdf4ed;
+$primary-font-color: #1432e0;
+$secondary-color: #bbc5f6;
+$tertiary-color: #f9bf8c;
+
+.container{
+    background-color: $primary-color;
+    background-image: url('./images/pizzazz.png');
+    background-repeat: repeat;
+    min-height: 100vh;
+}
+
+$padding-lg: 40px;
+$padding-sm: 20px;
+
+
+@mixin checkboxtoggler(){
+    input[type='checkbox']{
+        position: absolute;
+        width: 100%; height: 100%;
+        opacity: 0;
+        z-index: 3;
+        cursor: pointer;
+    }
+
+    span.indicator{
+        position: absolute;
+        width: 100%; height: 100%;
+        z-index: 2;
+        cursor: pointer;
+    }
+}
+
+@mixin okpadding(){
+    padding: 10px $padding-sm;
+    @media #{$tablet} { padding: 20px $padding-lg;}
+}
+
+
+main {
+
+    background: rgba(255,255,255,.5);
+    padding-bottom: 10px;
+    @media #{$tablet} {
+        max-width: 820px;
+        margin: 0 auto;
+        padding-bottom: 20px;
+    }
+
+    header{
+        background: $primary-font-color;
+        h1{font-size: 10vh;}
+        h1, p { color: #fff; }
+        p {text-align: right;}
+        @include okpadding();
+    }
+
+    section{
+        @include okpadding();
+
+    }
+
+    ul {
+        list-style: none;
+        li {
+            > * {
+                display: inline-block;
+                vertical-align: top;
+                margin-bottom: 4px;
+            }
+
+            span.avoided-checkbox{
+
+                width: 40px;
+                height: 40px;
+                position: relative;
+
+                @include checkboxtoggler();
+                .indicator{
+                    background: $tertiary-color;
+                    padding: 5px 0px 0px 10px; 
+                }
+            }
+            
+            span.avoided-item{
+                line-height: 32px;
+                height: 40px;
+                padding-left: 5px;
+            }
+
+        }
+    }
+}
