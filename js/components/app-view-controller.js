@@ -59,7 +59,7 @@ class ToDontList extends Component {
     console.log(this.state.tasks)
     var jsxEls = arr.filter(filter_fn).map((dontItem, indx) => {
       return (
-        <li key={indx}>
+        <li key={this.indexer++}>
             <CheckBox cb={ this._updateStatus.bind(this) } isChecked={dontItem.avoided} itemId={dontItem._id} />
             <span className="avoided-item">{dontItem.item} </span>
         </li>
