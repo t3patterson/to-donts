@@ -6,6 +6,8 @@ export default class ToDontList extends Component {
     super(props)
   }
 
+  _
+
   _generateJSXList(arr, viewType){
 
     var filter_fn = {
@@ -20,7 +22,10 @@ export default class ToDontList extends Component {
         <li key={dontItem.id}>
             <CheckBox cb={ this.props.updateStatus_cb } isChecked={dontItem.avoided} itemId={dontItem.id} />
             <span className="avoided-item">{dontItem.item} </span>
-            <span onClick={this.props.deleteItem_cb.bind(this, dontItem.id)} className="dump-it"><i className="fa fa-2x fa-trash-o" /></span>
+            <span className="item-ops">
+              <i className="fa fa-2x fa-trash-o" onClick={this.props.deleteItem_cb.bind(this, dontItem.id)}  />
+              <i className="fa fa-2x fa-refresh" onClick={this.props.updateStatus_cb.bind(this, dontItem.id, "set-null") }/>
+            </span>
         </li>
       )
     })

@@ -35,15 +35,28 @@ export default class AppViewController extends Component {
     })
   }
 
-  _updateItem(itemId){
-
+  _updateItem(itemId, action){
+    console.log(arguments)
     var mdl = this.props.fbColl._byId[itemId]
 
-    if (mdl.get('avoided') ){
-      mdl.set({avoided: false})
-    } else {
-      mdl.set({avoided: true})
+    console.log(action)
+
+    switch(action){
+      case "set-null":
+        console.log("SET NULL!!")
+        mdl.set({avoided: ""})
+        break;
+      case "set-boolean":
+        if (mdl.get('avoided') ){
+          mdl.set({avoided: false})
+        } else {
+          mdl.set({avoided: true})
+        }
+        break;
+      default:
+        console.log('nothign happens')
     }
+    
   }
 
   _addItem(formEl){

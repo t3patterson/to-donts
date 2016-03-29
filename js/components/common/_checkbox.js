@@ -6,8 +6,8 @@ export default class CheckBox extends Component {
 
   }
 
-  toggleClick(){
-    this.props.cb(this.props.itemId)
+  _toggleClick(){
+    this.props.cb(this.props.itemId, "set-boolean")
   }
 
   _getMark(checkStatus){
@@ -24,7 +24,7 @@ export default class CheckBox extends Component {
     var pendingCss = ''
     if ( this.props.isChecked === "" ){ pendingCss = 'is-pending' }
     return (
-      <span className={"avoided-checkbox " + pendingCss } onClick={this.toggleClick.bind(this)}>
+      <span className={"avoided-checkbox " + pendingCss } onClick={this._toggleClick.bind(this)}>
         <input type="checkbox"/>
         <span className="indicator">{ this._getMark(this.props.isChecked) }</span>
       </span>
