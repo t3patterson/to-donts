@@ -10,8 +10,8 @@ export default class ToDontList extends Component {
 
     var filter_fn = {
       "yes-avoided":  (itm) =>  itm.avoided === true,
-      "not-avoided":  (itm) =>  itm.avoided === false && itm.avoided !== null,
-      "pending"    :  (itm) =>  itm.avoided === null,
+      "not-avoided":  (itm) =>  itm.avoided === false && itm.avoided !== "",
+      "pending"    :  (itm) =>  itm.avoided === "",
       "all"        :  (itm) =>  true 
     }
 
@@ -20,6 +20,7 @@ export default class ToDontList extends Component {
         <li key={dontItem.id}>
             <CheckBox cb={ this.props.updateStatus_cb } isChecked={dontItem.avoided} itemId={dontItem.id} />
             <span className="avoided-item">{dontItem.item} </span>
+            <span onClick={this.props.deleteItem_cb.bind(this, dontItem.id)} className="dump-it"><i className="fa fa-2x fa-trash-o" /></span>
         </li>
       )
     })
@@ -35,7 +36,6 @@ export default class ToDontList extends Component {
         <ul>
           {this._generateJSXList(this.props.tasks, this.props.currentViewType) }
         </ul>
-        <hr/>
       </section>
     )
   }

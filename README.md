@@ -22,21 +22,50 @@ DOM.render(
 )
 
 
-//4) on componentDidMount(): collectionInstance.on('sync') to handle 
-//   fetched data
+//4) Fetching Records for View (first-time and on db changes )
+
 //----------- app-view-controller.js : <AppViewController/>
 
 componentDidMount(){
-    this.props.fbColl.on('sync', function(d){
+    this.props.fbColl.on('sync update', function(d){
       console.log("SYNCED!")
       console.log(bbFireInstance.toJSON())
     })
 }
-//-------------------------------
+//   ^^on componentDidMount(): collectionInstance.on('sync update') 
+//   'update' to handle fetched data and when data updates (fbColl.create)
 
 
-//4) collectionInstance.on('sync') to handle fetched data
+//5) Creating Records
 //----------- app-view-controller.js : <AppViewController/>
+_addItem(formEl){
+  console.log('handling submit from AppView')
+  var dontDoItm = document.getElementById('newTodo').value
+  console.log(this.props.fbColl)
+  
+  this.props.fbColl.create({ avoided: "", item: dontDoItm })
+}
+//^^ note: make sure that you have .on('update') so that the listener picks up the change...'sync' event doesn't fire event though create successfully posts to db
+
+//6) Updating Records
+//----------- app-view-controller.js : <AppViewController/>
+_updateItem(itemId){
+
+  var mdl = this.props.fbColl._byId[itemId]
+
+  if (mdl.get('avoided') ){
+    mdl.set({avoided: false})
+  } else {
+    mdl.set({avoided: true})
+  }
+}
+
+//^^ triggers 'sync' event and is picked up by fbColl.on('sync')
+
+//7) Deleting Records
+//----------- app-view-controller.js : <AppViewController/>
+
+
 
 
 ```

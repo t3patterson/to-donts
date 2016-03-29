@@ -1,6 +1,4 @@
-import BackboneFire from 'bbfire'
 import React, {Component} from 'react'
-import {DontDoCollection, DontDoModel } from '../collection/dont-do.js'
 
 export default class NavView extends Component{
   constructor(props){
@@ -8,7 +6,7 @@ export default class NavView extends Component{
   }
 
   _generateButtonsJSX(navList, currentView){
-    return navList.map(function(navBtn,i){ 
+    return navList.map(function(navBtn, ik){ 
       var btnClass = ''
       // console.log('view is...', currentView)
       // console.log('button says...', navBtn.viewName, navList)
@@ -16,7 +14,7 @@ export default class NavView extends Component{
 
       if (currentView === navBtn.viewName ){btnClass = "selected"}
 
-      return <button key={i} onClick={this.props.navToView.bind(this, navBtn.viewName)} className={btnClass}> {navBtn.label} </button>
+      return <button key={ik} onClick={this.props.navToView.bind(this, navBtn.viewName)} className={btnClass}> {navBtn.label} </button>
     }.bind(this))
   }
 

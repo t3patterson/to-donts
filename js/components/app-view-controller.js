@@ -1,8 +1,10 @@
 import BackboneFire from 'bbfire'
 import React, {Component} from 'react'
 import { DontDoCollection, DontDoModel } from '../collection/dont-do.js'
+
 import NavView from './XX-nav-view.js'
-import ToDontList from './XX-to-dont-list-view.js'
+import ToDontListView from './XX-to-dont-list-view.js'
+import AddDontView from './XX-add-dont-view.js'
 
 var indexer = {
   val: 0
@@ -27,7 +29,13 @@ export default class AppViewController extends Component {
     }
   }
 
-  _updateStatus(itemId){
+  _navToView(selectedVal){
+    this.setState({
+      currentViewType: selectedVal
+    })
+  }
+
+  _updateItem(itemId){
 
     var mdl = this.props.fbColl._byId[itemId]
 
@@ -36,18 +44,27 @@ export default class AppViewController extends Component {
     } else {
       mdl.set({avoided: true})
     }
-
   }
 
-  _navToView(selectedVal){
-    this.setState({
-      currentViewType: selectedVal
-    })
+  _addItem(formEl){
+    console.log('handling submit from AppView')
+    var dontDoItm = document.getElementById('newTodo').value
+    console.log(this.props.fbColl)
+    
+    this.props.fbColl.create({ avoided: "", item: dontDoItm })
   }
+
+  _deleteItem(itemId){
+    console.log(itemId)
+    var mdl = this.props.fbColl._byId[itemId]
+    console.log(mdl)
+    mdl.destroy();
+  }
+
 
 
   componentDidMount(){
-    this.props.fbColl.on('sync', function(){
+    this.props.fbColl.on('sync update', function(){
       console.log('SYNC!')
       this.setState({
         tasks: this.props.fbColl.toJSON()
@@ -63,8 +80,10 @@ export default class AppViewController extends Component {
           <p><small>just don't fuck up and I promise you'll be okay</small></p>
         </header>
         <NavView navOptions={this.navOps} navToView={this._navToView.bind(this) } currentViewType={this.state.currentViewType}/>
-        <ToDontList updateStatus_cb={this._updateStatus.bind(this)} currentViewType={this.state.currentViewType} tasks={this.state.tasks}/>
+        <ToDontListView deleteItem_cb={this._deleteItem.bind(this)} updateStatus_cb={this._updateItem.bind(this)} currentViewType={this.state.currentViewType} tasks={this.state.tasks}/>
         <hr/>
+        <AddDontView handleSubmit={this._addItem.bind(this)} />
+
       </main>
     )
   }

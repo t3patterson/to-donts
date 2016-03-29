@@ -14,9 +14,9 @@ export default class CheckBox extends Component {
     if (checkStatus === "") { return '' }
     
     if (checkStatus){
-      return <img src="./images/checkmark.svg" />
+      return <i className="fa fa-2x fa-check" style={{color: "#1E824C"}}/>
     } else {
-      return <img className="x-mark" src="./images/x-mark.svg"/>
+      return <i className="fa fa-2x fa-times" style={{color: "#96281B"}}/>
     }
   }
 
