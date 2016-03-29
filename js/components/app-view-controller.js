@@ -1,11 +1,58 @@
-
+import BackboneFire from 'bbfire'
 import React, {Component} from 'react'
+import {DontDoCollection, DontDoModel } from '../collection/dont-do.js'
+
+var indexer = {
+  val: 0
+} 
 
 export default class AppViewController extends Component {
 
   constructor(props){
     super(props)
-    console.log('new component, yeah?')
+
+
+    this.navOps = [   
+        {label: "Successfully Avoided", "viewName": "yes-avoided"}, 
+        {label: "Not Avoided", "viewName": "not-avoided"}, 
+        {label: "Pending", "viewName": "pending"}, 
+        {label: "All", "viewName": "all"}
+    ]
+
+    this.state = {
+      tasks: this.props.fbColl.toJSON(),
+      currentViewType: "all"
+    }
+  }
+
+
+
+  _updateStatus(itemId){
+
+    var mdl = this.props.fbColl._byId[itemId]
+
+    if (mdl.get('avoided') ){
+      mdl.set({avoided: false})
+    } else {
+      mdl.set({avoided: true})
+    }
+
+  }
+
+  _navToView(selectedVal){
+    this.setState({
+      currentViewType: selectedVal
+    })
+  }
+
+
+  componentDidMount(){
+    this.props.fbColl.on('sync', function(){
+      console.log('SYNC!')
+      this.setState({
+        tasks: this.props.fbColl.toJSON()
+      })
+    }.bind(this))
   }
 
   render(){
@@ -15,8 +62,36 @@ export default class AppViewController extends Component {
           <h1>To Don't List</h1>
           <p><small>just don't fuck up and I promise you'll be okay</small></p>
         </header>
-        <ToDontList/>
+        <NavView navOptions={this.navOps} navToView={this._navToView.bind(this) } currentViewType={this.state.currentViewType}/>
+        <ToDontList updateStatus_cb={this._updateStatus.bind(this)} currentViewType={this.state.currentViewType} tasks={this.state.tasks}/>
       </main>
+    )
+  }
+}
+
+class NavView extends Component{
+  constructor(props){
+    super(props)
+  }
+
+  _generateButtonsJSX(navList, currentView){
+    return navList.map(function(navBtn){ 
+      var btnClass = ''
+      // console.log('view is...', currentView)
+      // console.log('button says...', navBtn.viewName, navList)
+
+
+      if (currentView === navBtn.viewName ){btnClass = "selected"}
+
+      return <button key={indexer.val++} onClick={this.props.navToView.bind(this, navBtn.viewName)} className={btnClass}> {navBtn.label} </button>
+    }.bind(this))
+  }
+
+  render(){
+    return (
+      <nav>
+        { this._generateButtonsJSX(this.props.navOptions, this.props.currentViewType) }
+      </nav>
     )
   }
 }
@@ -25,42 +100,21 @@ export default class AppViewController extends Component {
 class ToDontList extends Component {
   constructor(props){
     super(props)
-    this.indexer = 0
-    this.state = {
-      tasks: [
-        { _id: 1, item: "more than 2 cups of coffee", avoided: false },
-        { _id: 2, item: "call my ex", avoided: true},
-        { _id: 3, item: "gossip about how evil Mariah is", avoided: false},
-        { _id: 4, item: "no fried food at lunch", avoided: false }
-      ]
+  }
+
+  _generateJSXList(arr, viewType){
+
+    var filter_fn = {
+      "yes-avoided":  (itm) =>  itm.avoided === true,
+      "not-avoided":  (itm) =>  itm.avoided === false && itm.avoided !== null,
+      "pending"    :  (itm) =>  itm.avoided === null,
+      "all"        :  (itm) =>  true 
     }
-  }
 
-  _updateStatus(itemId){
-    var founded = this.state.tasks.find( (t) => t._id === itemId )
-    console.log(founded)
-
-    var updatedTasks = this.state.tasks.map((t)=>{
-      if ( founded._id !== t._id ) return t
-
-      if (t.avoided){
-        t.avoided = false
-      } else {
-        t.avoided = true
-      }
-
-      return t
-    })
-
-    this.setState({updatedTasks}) 
-  }
-
-  generateJSXList(arr, filter_fn){
-    console.log(this.state.tasks)
-    var jsxEls = arr.filter(filter_fn).map((dontItem, indx) => {
+    var jsxEls = arr.filter(filter_fn[viewType]).map((dontItem, indx) => {
       return (
-        <li key={this.indexer++}>
-            <CheckBox cb={ this._updateStatus.bind(this) } isChecked={dontItem.avoided} itemId={dontItem._id} />
+        <li key={indexer.val++}>
+            <CheckBox cb={ this.props.updateStatus_cb } isChecked={dontItem.avoided} itemId={dontItem.id} />
             <span className="avoided-item">{dontItem.item} </span>
         </li>
       )
@@ -70,21 +124,12 @@ class ToDontList extends Component {
   }
 
   render(){
+    
     return (
       <section>
-        <h4>Successfully Avoided</h4>
+        <h4>{this.props.currentView}</h4>
         <ul>
-          {this.generateJSXList(this.state.tasks, (t)=>{return t.avoided===true})}
-        </ul>
-        <hr/>
-        <h4>Not Yet Avoided</h4>
-        <ul>
-          {this.generateJSXList(this.state.tasks, (t)=>{return t.avoided===false})}
-        </ul>
-        <hr/>
-        <h4>Errthing</h4>
-        <ul>
-          {this.generateJSXList(this.state.tasks, (t)=>{return true})}
+          {this._generateJSXList(this.props.tasks, this.props.currentViewType) }
         </ul>
         <hr/>
       </section>
@@ -96,21 +141,29 @@ class CheckBox extends Component {
   constructor(props){
     super(props)
 
-    this.state = { isChecked: this.props.isChecked }
-
-    this.checkMark = () => { return <img src="./images/checkmark.svg" />} 
   }
 
   toggleClick(){
     this.props.cb(this.props.itemId)
   }
 
+  _getMark(checkStatus){
+    if (checkStatus === "") { console.log("nullllll"); return '' }
+    
+    if (checkStatus){
+      return <img src="./images/checkmark.svg" />
+    } else {
+      return <img className="x-mark" src="./images/x-mark.svg"/>
+    }
+  }
+
   render(){
-    console.log('checked??', this.state.isChecked)
+    var pendingCss = ''
+    if ( this.props.isChecked === "" ){ pendingCss = 'is-pending' }
     return (
-      <span className="avoided-checkbox" onClick={this.toggleClick.bind(this)}>
+      <span className={"avoided-checkbox " + pendingCss } onClick={this.toggleClick.bind(this)}>
         <input type="checkbox"/>
-        <span className="indicator">{ this.state.isChecked ? this.checkMark() : "" }</span>
+        <span className="indicator">{ this._getMark(this.props.isChecked) }</span>
       </span>
     )
   }

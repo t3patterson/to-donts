@@ -1,3 +1,32 @@
+###BackFire
+```js
+//----------- collection/dont-do.js -------------
+var TodoModel = BackboneFire.Firebase.Collection.extend({
+  url: "https://todo4u.firebaseio.com/"
+})
+
+//----------- router.js -------------
+//2) create instance new TodoModel()
+var bbFireInstance = new TodoModel()
+
+console.log('...fetch...')
+
+//----------- app-view-controller.js-------------
+//3) collectionInstance.on('sync') to fetch data
+
+componentDidMount(){
+    bbFireInstance.on('sync', function(d){
+      console.log("SYNCED!")
+      console.log(bbFireInstance.toJSON())
+    })
+}
+
+//-------------------------------
+
+```
+
+
+
 ###Interesting Bug w/ The `keys`
 ```js
 <section>
