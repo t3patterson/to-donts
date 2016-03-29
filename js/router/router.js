@@ -5,7 +5,6 @@ import React from 'react'
 import DOM from 'react-dom'
 
 import AppViewController from '../components/app-view-controller.js'
-
 import {DontDoCollection, DontDoModel } from '../collection/dont-do.js'
 
 var AppRouter = Backbone.Router.extend({
@@ -15,7 +14,7 @@ var AppRouter = Backbone.Router.extend({
 
   showDefault: function(){
     var dontDoColl = new DontDoCollection();
-
+    console.log(AppViewController)
     DOM.render(<AppViewController fbColl={dontDoColl}/>, document.querySelector('.container'))
   },
 

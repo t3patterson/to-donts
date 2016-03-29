@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
+import CheckBox from './common/_checkbox.js'
 
-
-export class ToDontList extends Component {
+export default class ToDontList extends Component {
   constructor(props){
     super(props)
   }

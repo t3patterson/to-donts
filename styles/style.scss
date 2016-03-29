@@ -135,7 +135,7 @@ body {
 
 $tablet: "screen and (min-width: 640px)";
 $primary-color: #bdf4ed;
-$primary-font-color: #1432e0;
+$primary-font-color: #2574A9;
 $secondary-color: #bbc5f6;
 $tertiary-color: #f9bf8c;
 
@@ -176,12 +176,21 @@ nav {
     text-align: center;
     > * {
         display: inline-block;
-        background: rgba(255,255,255,.3);
-
+        border: 0;
         margin: 5px;
+        background: $secondary-color;
+        color: #333;
+        padding: 10px;
+
+        &:focus{
+            outline: 0px solid #fff; border: none; outline-color: none;
+        }
 
         &.selected{
-            background: $secondary-color;
+
+            background: $primary-font-color;
+            color: #fff;
+
         }
     }
 

@@ -1,27 +1,43 @@
-###BackFire
+###BackboneFire
 ```js
-//----------- collection/dont-do.js -------------
-var TodoModel = BackboneFire.Firebase.Collection.extend({
+
+//1) Extend the collection to the ToDoCollection
+//----------- collection/dont-do.js 
+var TodoCollection = BackboneFire.Firebase.Collection.extend({
   url: "https://todo4u.firebaseio.com/"
 })
 
-//----------- router.js -------------
-//2) create instance new TodoModel()
-var bbFireInstance = new TodoModel()
+//2) Create instance new TodoModel()
+//----------- router.js 
+//    NB: immediately triggers a 'fetch' and creates 
+//        an open connection thru web sockets to the db
+var bbFireInstance = new TodoCollection()
 
-console.log('...fetch...')
 
-//----------- app-view-controller.js-------------
-//3) collectionInstance.on('sync') to fetch data
+//3) Pass the collection instance as props to the React Component
+//----------- router.js 
+DOM.render(
+  <AppViewController fbColl={bbFireInstance}/>, 
+  document.querySelector('.container') 
+)
+
+
+//4) on componentDidMount(): collectionInstance.on('sync') to handle 
+//   fetched data
+//----------- app-view-controller.js : <AppViewController/>
 
 componentDidMount(){
-    bbFireInstance.on('sync', function(d){
+    this.props.fbColl.on('sync', function(d){
       console.log("SYNCED!")
       console.log(bbFireInstance.toJSON())
     })
 }
-
 //-------------------------------
+
+
+//4) collectionInstance.on('sync') to handle fetched data
+//----------- app-view-controller.js : <AppViewController/>
+
 
 ```
 
