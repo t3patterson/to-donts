@@ -6,8 +6,6 @@ export default class ToDontList extends Component {
     super(props)
   }
 
-  _
-
   _generateJSXList(arr, viewType){
 
     var filter_fn = {

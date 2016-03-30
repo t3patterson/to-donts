@@ -280,40 +280,42 @@ main {
             }
         }
     }
-}
 
-form {
-    $el_height: 35px;
+    form {
+        $el_height: 35px;
 
-    min-width: 300px;
-    max-width: 440px;
-    margin: 0 auto;
-    text-align: center;
-
-    >*{
-        outline: 0; border: 0;
-    }
-
-    input[type="text"]{
-        height: $el-height;
-        line-height: $el_height;
-        font-size: 21px;
-        background: rgba(255,255,255,0);
-        position: relative;
-        top: -2px;
-
-        &:focus{
-            outline: 0; border: 0;
-            border-bottom: 2px solid $primary-color-dark;
-        }
-    }
-    input[type="submit"]{
-        height: $el-height;
-        line-height: 30px;
-        font-size: 30px;
-        background: $primary-color-dark;
-        width: 35px;
+        min-width: 300px;
+        max-width: 440px;
+        margin: 0 auto;
         text-align: center;
-    }
 
+        >*{
+            outline: 0; border: 0;
+        }
+
+        input[type="text"]{
+            height: $el-height;
+            line-height: $el_height;
+            font-size: 21px;
+            background: rgba(255,255,255,0);
+            position: relative;
+            top: -2px;
+
+            &:focus{
+                outline: 0; border: 0;
+                border-bottom: 2px solid $primary-color-dark;
+            }
+        }
+        input[type="submit"]{
+            height: $el-height;
+            line-height: 30px;
+            font-size: 30px;
+            background: $primary-color-dark;
+            width: 35px;
+            text-align: center;
+        }
+
+    }
 }
+
+
