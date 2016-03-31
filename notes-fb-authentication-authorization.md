@@ -39,3 +39,39 @@ ref.authWithPassword({
   }
 )
 ```
+
+
+###Authorization
+To secure this data: 
+```js
+  {
+    "toDontObjects" : {
+      "-KECYPx4ItmdUZMONp7E" : {
+        "id" : "-KECYPx4ItmdUZMONp7E",
+        "secrets" : "I heart u",
+        "uid" : "ed2abf4f-dd3f-4e63-9c99-ca5842ff3ac6"
+      },
+      "-KECYPx4ItmdUZMONp7E" : {
+        "id" : "-KECYPx4ItmdUZMONp7E",
+        "secrets" : "I dont hart you u",
+        "uid" : "3d26b84l-bb3-4e0x-9lza-f3ac842f6ca5"
+      }
+    }
+  }
+```
+
+You must do this:
+```js
+{
+    "rules": {
+      ".write": true,
+      ".read" : false,        
+      "toDontObjects":{
+        ".read" : "auth !== null",
+        "$toDontKey":{
+          ".read": "data.child('uid').val() === auth.uid"  
+        }
+      }
+    }
+}
+```

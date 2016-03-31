@@ -2,6 +2,17 @@ import Firebase from 'firebase'
 
 import BackboneFire from 'bbfire'
 
+
+function testRef(r){
+  console.log('======== ==== ====')
+  console.log('==== testRef ====')
+  r.on(
+    'value', 
+    function(s){ console.log("the--reff", s.val() ) },
+    function(e){ console.log( e ) }
+  )
+}
+
 export var DontDoModel = BackboneFire.Firebase.Model.extend({
   url: "",
 
@@ -10,7 +21,7 @@ export var DontDoModel = BackboneFire.Firebase.Model.extend({
   }
 })
 
-export var DontDoMetaCollection = BackboneFire.Firebase.Collection.extend({
+export var ToDontMetaCollection = BackboneFire.Firebase.Collection.extend({
   autoSync: false,
   
   url: "",
@@ -20,19 +31,24 @@ export var DontDoMetaCollection = BackboneFire.Firebase.Collection.extend({
     var ref = new Firebase("https://todo4u.firebaseio.com/toDontObjects/")
     if (uid) { ref = ref.orderByChild('uid').equalTo(uid) }
     this.url = ref
+    testRef(ref)
   }
 })
 
 
 
-export var SingleDontDoCollection = BackboneFire.Firebase.Collection.extend({
-  autoSync: false,
+export var SingleToDontCollection = BackboneFire.Firebase.Collection.extend({
+  autoSync: true,
   
   url: "",
+  parse: function(d){
+    console.log(d)
+  }
 
-  initialize: function(id){
-    var ref = new Firebase("https://todo4u.firebaseio.com/toDontObjects/"+id)
-    this.url = ref.child("toDontList")
+  initialize: function(fbId){
+    console.log('time to get a singleDontDo')
+    var ref = new Firebase("https://todo4u.firebaseio.com/toDontObjects/")
+    this.url = ref.child(fbId).child("toDontList")
   }
 })
 

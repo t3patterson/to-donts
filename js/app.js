@@ -10,6 +10,6 @@ const fireBaseURL = "https://todo4u.firebaseio.com/"
 console.log("=======")
 
 
-seedDB(fireBaseURL)
+// seedDB(fireBaseURL)
 
 var app = new AppRouter()

@@ -16,6 +16,7 @@ export default class ToDontList extends Component {
     }
 
     var jsxEls = arr.filter(filter_fn[viewType]).map((dontItem, indx) => {
+      if (!dontItem.id) return
       return (
         <li key={dontItem.id}>
             <CheckBox cb={ this.props.updateStatus_cb } isChecked={dontItem.avoided} itemId={dontItem.id} />

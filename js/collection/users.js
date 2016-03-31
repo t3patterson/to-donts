@@ -2,6 +2,16 @@ import Firebase from 'firebase'
 
 import BackboneFire from 'bbfire'
 
+function testRef(r){
+  console.log('======== ==== ====')
+  console.log('==== testRef ====')
+  r.on(
+    'value', 
+    function(s){ console.log("the--reff", s.val() ) },
+    function(e){ console.log( e ) }
+  )
+}
+
 export var UserQueryModel = BackboneFire.Firebase.Model.extend({
   autoSync: false,
   _uid: "",
@@ -23,8 +33,9 @@ export var UserQueryColl = BackboneFire.Firebase.Collection.extend({
   
   initialize: function(uid){
     console.log('model iniitializEEDD!!! -- ' + uid)
-    var ref = new Firebase("https://todo4u.firebaseio.com/users")
-    this.url = ref.child('uid')
+    var ref = new Firebase("https://todo4u.firebaseio.com/users/")
+    this.url = ref.orderByChild('uid').equalTo(uid)
+    testRef(ref)
   }
 })
 

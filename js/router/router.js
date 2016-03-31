@@ -11,10 +11,11 @@ var ref = new Firebase(fireBaseURL)
 import AppViewController from '../components/app-view-controller.js'
 import AuthViewController from '../components/app-view-controller.js'
 
-import {DontDoCollection, DontDoModel } from '../collection/to-donts.js'
+import {ToDontMetaCollection, SingleToDontCollection } from '../collection/to-donts.js'
 import {UsersCollection, UserQueryColl, UserQueryModel} from    '../collection/users.js'
 
 
+var authenticatedUserSecrets = null
 
 var AppRouter = Backbone.Router.extend({
   routes: {
@@ -25,9 +26,20 @@ var AppRouter = Backbone.Router.extend({
 
   showDefault: function(){
     console.log('def')
-    var dontDoColl = new DontDoCollection();
-    console.log(AppViewController)
-    DOM.render(<AppViewController fbColl={dontDoColl}/>, document.querySelector('.container'))
+
+    if(!authenticatedUserSecrets) {
+      this.navigate("login-test", {trigger: true}); 
+      return 
+    }
+
+    var idKey = authenticatedUserSecrets.id
+
+    var toDontColl = new SingleToDontCollection(idKey);
+    var userColl = new UserQueryColl(authenticatedUserSecrets.get('uid'))
+
+    userColl.fetch()
+
+    DOM.render(<AppViewController fbUserData={userColl} fbColl={toDontColl}/>, document.querySelector('.container'))
   },
 
   signupTest: function(){
@@ -181,23 +193,45 @@ var LoginView = Backbone.View.extend({
 
       if(authData){
         console.log('user SO authenticated -- ', authData)
+       
 
-        var usr = new UserQueryColl(authData.uid);
 
-        usr.fetch()        
-
-        usr.on('sync', function(){
-          usr.autoSync = true
-          console.log('teh FOUND collection', usr)
+        // AWESOME 
+        var userSecretColl = new ToDontMetaCollection( authData.uid );
+        userSecretColl.fetch()
+        userSecretColl.on("sync", function(){
+          console.log("all the users secrets: ", userSecretColl.models[0])
+          authenticatedUserSecrets = userSecretColl.models[0]
+          window.location.hash= ''
         })
+  
+        // ALTERNATIVE PROMISE
+        // var getUserByUid = function(uid){
+        //   return new Promise(function(resolve, reject){
+        //     var usr = new UserQueryColl(uid);
+        //     usr.fetch();
+        //     console.log('fetchingg....', uid)        
+        //     usr.on('sync', function(){
+        //       console.log('teh FOUND collection', usr.models[0] )
+        //       resolve(uid)
+        //     })
+        //   })
+        // }
+
+        // getUserByUid(authData.uid).then(function(usrObj){
+        //   console.log('promised usr', usrObj.id)
+        //   var userSecretColl = new DontDoMetaCollection(usrObj.get('uid') );
+        //   userSecretColl.fetch()
+        //   userSecretColl.on("sync", function(){
+        //     console.log("all the users secrets: ", userSecretColl)
+        //   })
+
+        // })
+
+   
 
 
-        // =========
-        ref.child('users').child().on(
-          'value', 
-          function(s){ console.log("the--reff", s.val() ) },
-          function(e){ console.log( e ) }
-        )
+      
 
         
         $('.logged-in-user').html(`

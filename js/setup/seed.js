@@ -1,5 +1,5 @@
 import Firebase from 'firebase'
-import { DontDoMetaCollection, SingleDontDoCollection } from '../collection/to-donts.js'
+import { ToDontMetaCollection, SingleToDontCollection } from '../collection/to-donts.js'
 import { UsersCollection  } from '../collection/users.js'
 
 var usersArr = [

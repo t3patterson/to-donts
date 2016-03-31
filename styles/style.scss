@@ -139,6 +139,8 @@ $primary-color-dark: rgb(167,238,229);
 $primary-font-color: #2574A9;
 $secondary-color: #bbc5f6;
 $tertiary-color: #f9bf8c;
+$fourth-color: rgb(241,224,90);
+
 
 .container{
     background-color: $primary-color;
@@ -171,6 +173,15 @@ $padding-sm: 20px;
 @mixin okpadding(){
     padding: 10px $padding-sm;
     @media #{$tablet} { padding: 20px $padding-lg;}
+}
+
+.greeting{
+    font-weight: 200;
+    .hilite{
+        font-weight: 700;
+        background: $fourth-color;
+        padding: 7px;
+    }
 }
 
 nav {
