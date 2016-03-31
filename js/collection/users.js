@@ -1,13 +1,30 @@
+import Firebase from 'firebase'
+
 import BackboneFire from 'bbfire'
 
-export var UserModel = BackboneFire.Firebase.Model.extend({
-  url: function(id){
+export var UserQueryModel = BackboneFire.Firebase.Model.extend({
+  autoSync: false,
+  _uid: "",
 
-    return "https://todo4u.firebaseio.com/users/" + this.id
-  },
+  url: "",
   
-  initialize: function(id){
-    this.id = id
+  initialize: function(uid){
+    console.log('model iniitializEEDD!!!')
+    var ref = new Firebase("https://todo4u.firebaseio.com/users")
+    this.url = ref.orderByChild('uid').equalTo(uid)
+  }
+})
+
+export var UserQueryColl = BackboneFire.Firebase.Collection.extend({
+  autoSync: false,
+  _uid: "",
+
+  url: "",
+  
+  initialize: function(uid){
+    console.log('model iniitializEEDD!!! -- ' + uid)
+    var ref = new Firebase("https://todo4u.firebaseio.com/users")
+    this.url = ref.child('uid')
   }
 })
 
@@ -20,8 +37,9 @@ export var UsersCollection = BackboneFire.Firebase.Collection.extend({
   },
 
   initialize: function(){
-  }
+    this.url = new Firebase("https://todo4u.firebaseio.com/users/")
 
+  }
 })
   
-  
+

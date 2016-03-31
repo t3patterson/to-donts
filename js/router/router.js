@@ -11,10 +11,9 @@ var ref = new Firebase(fireBaseURL)
 import AppViewController from '../components/app-view-controller.js'
 import AuthViewController from '../components/app-view-controller.js'
 
-import {DontDoCollection, DontDoModel } from '../collection/dont-do.js'
-import {UsersCollection, UserModel } from    '../collection/users.js'
+import {DontDoCollection, DontDoModel } from '../collection/to-donts.js'
+import {UsersCollection, UserQueryColl, UserQueryModel} from    '../collection/users.js'
 
-import seedDB from '../setup/seed.js'
 
 
 var AppRouter = Backbone.Router.extend({
@@ -94,6 +93,7 @@ var SignUpView = Backbone.View.extend({
         if (err) console.log(err)
           else {
             console.log('new user---> ',  uData )
+
             var uColl = new UsersCollection();
             uColl.create({
               email:    evt.currentTarget.email.value,
@@ -155,9 +155,11 @@ var LoginView = Backbone.View.extend({
 
       function(err, userData){
         if(err) console.log(err)
-          else console.log('authenticated: ', userData)
+          else  console.log('authenticated.....') 
       }
     )
+
+   
   },
 
   _handleLogout: function(evt){
@@ -176,16 +178,35 @@ var LoginView = Backbone.View.extend({
     this.render()
 
     ref.onAuth(function(authData){
+
       if(authData){
         console.log('user SO authenticated -- ', authData)
+
+        var usr = new UserQueryColl(authData.uid);
+
+        usr.fetch()        
+
+        usr.on('sync', function(){
+          usr.autoSync = true
+          console.log('teh FOUND collection', usr)
+        })
+
+
+        // =========
+        ref.child('users').child().on(
+          'value', 
+          function(s){ console.log("the--reff", s.val() ) },
+          function(e){ console.log( e ) }
+        )
+
         
         $('.logged-in-user').html(`
           <hr/>
-          <button class='logout'>Logout</button>"
+          <button class='logout'>Logout</button>
           <div>
-            <pre>
-              ${ JSON.stringify(authData.password,null,2) }
-            </pre>
+            <div style="background: lightgreen">
+                secrets here
+            </div>
           </div>
         `)
       } else {
