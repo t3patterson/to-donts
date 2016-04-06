@@ -12,4 +12,4 @@ console.log("=======")
 
 // seedDB(fireBaseURL)
 
-var app = new AppRouter()
+var app= new AppRouter()

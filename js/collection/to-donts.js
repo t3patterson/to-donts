@@ -43,7 +43,7 @@ export var SingleToDontCollection = BackboneFire.Firebase.Collection.extend({
   url: "",
   parse: function(d){
     console.log(d)
-  }
+  },
 
   initialize: function(fbId){
     console.log('time to get a singleDontDo')

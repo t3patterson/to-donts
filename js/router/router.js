@@ -11,7 +11,7 @@ var ref = new Firebase(fireBaseURL)
 import AppViewController from '../components/app-view-controller.js'
 import AuthViewController from '../components/app-view-controller.js'
 
-import {ToDontMetaCollection, SingleToDontCollection } from '../collection/to-donts.js'
+import {ToDontMetaCollection, SingleToDontCollection } from     '../collection/to-donts.js'
 import {UsersCollection, UserQueryColl, UserQueryModel} from    '../collection/users.js'
 
 

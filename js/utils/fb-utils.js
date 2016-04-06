@@ -36,7 +36,7 @@ function handleSignUp (evt){
 }
 
 // Handle Login
-_handleLogin: function(evt){
+function handleLogin (evt){
     evt.preventDefault()
     var view = this
     ref.authWithPassword({
@@ -49,11 +49,11 @@ _handleLogin: function(evt){
           else console.log('authenticated: ', userData)
       }
     )
-  },
+  }
 
 
 // Handle Changes in Auth-Status
- ref.onAuth(function(authData){
+ref.onAuth(function(authData){
     if(authData){
       console.log('user SO authenticated -- ', authData)
       
@@ -69,11 +69,10 @@ _handleLogin: function(evt){
     } else {
       console.log('user GONE bits'); $('.logged-in-user').html('')
     }
-  })
-}
+})
 
 // Handle Logout
-_handleLogout: function(evt){
+function _handleLogout (evt){
     console.log('logout!')
     ref.unauth()
-  },
+}
