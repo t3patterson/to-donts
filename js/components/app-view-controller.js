@@ -25,7 +25,8 @@ export default class AppViewController extends Component {
 
     this.state = {
       tasks: this.props.fbColl.toJSON(),
-      currentViewType: "all"
+      currentViewType: "all",
+      user: ''
     }
   }
 
@@ -78,9 +79,18 @@ export default class AppViewController extends Component {
 
   componentDidMount(){
     this.props.fbColl.on('sync update', function(){
+      this.props.fbColl.autoSync = true
       console.log('SYNC!')
       this.setState({
         tasks: this.props.fbColl.toJSON()
+      })
+    }.bind(this))
+
+    this.props.fbUserData.on('sync', function(){
+      var usrModel = this.props.fbUserData.models[0]
+      console.log('user data in REACT', usrModel )
+      this.setState({
+        user: usrModel.get('userName')
       })
     }.bind(this))
   }
@@ -92,6 +102,7 @@ export default class AppViewController extends Component {
           <h1>To Don't List</h1>
           <p><small>just don't fuck up and I promise you'll be okay</small></p>
         </header>
+        <h3 className="greeting">Welcome <span className="hilite">{this.state.user}</span> </h3>
         <NavView navOptions={this.navOps} navToView={this._navToView.bind(this) } currentViewType={this.state.currentViewType}/>
         <ToDontListView deleteItem_cb={this._deleteItem.bind(this)} updateStatus_cb={this._updateItem.bind(this)} currentViewType={this.state.currentViewType} tasks={this.state.tasks}/>
         <hr/>
